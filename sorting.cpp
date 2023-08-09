@@ -1,8 +1,9 @@
 #include <algorithm>
 #include <iostream>
 #include <vector>
-
-int main() {
+#include <queue>
+int main()
+{
   std::cout << "========\nSorting in C++!\n========\n";
 
   std::cout << "By default: \nstd::sort(vec.begin(),vec.end()) sorts in "
@@ -38,13 +39,15 @@ int main() {
 
   std::sort(v.begin(), v.end());
   std::cout << "Sorted Ascending: \n";
-  for (const auto &i : v) {
+  for (const auto &i : v)
+  {
     std::cout << i << " ";
   };
 
   std::sort(v.rbegin(), v.rend());
   std::cout << "\nSorted Descending: \n";
-  for (auto i : v) {
+  for (auto i : v)
+  {
     std::cout << i << " ";
   };
 
@@ -52,19 +55,22 @@ int main() {
   std::vector<std::pair<int, std::string>> p = {
       {3, "A"}, {1, "B"}, {5, "C"}, {0, "D"}, {4, "E"}};
   std::cout << "\nInitial Vector of Pairs \n";
-  for (auto i : p) {
+  for (auto i : p)
+  {
     std::cout << i.first << " " << i.second << std::endl;
   }
 
   std::sort(p.begin(), p.end());
   std::cout << "\nSorted Pair Ascending: \n";
-  for (const auto &i : p) {
+  for (const auto &i : p)
+  {
     std::cout << i.first << " " << i.second << std::endl;
   };
 
   std::sort(p.rbegin(), p.rend());
   std::cout << "\nSorted Pair Descending: \n";
-  for (const auto &i : p) {
+  for (const auto &i : p)
+  {
     std::cout << i.first << " " << i.second << std::endl;
   };
 
@@ -96,18 +102,65 @@ int main() {
   std::cout
       << "\nInitial Vector of Pairs std::vector<std::pair<int,std::string>>\n";
 
-  for (auto i : customPairSort) {
+  for (auto i : customPairSort)
+  {
     std::cout << i.first << " " << i.second << std::endl;
   }
   std::sort(customPairSort.begin(), customPairSort.end(),
             [&customPairSort](const std::pair<int, std::string> &a,
-                              const std::pair<int, std::string> &b) {
+                              const std::pair<int, std::string> &b)
+            {
               return a.second < b.second;
             });
 
   std::cout << "\nSorted std::vector<std::pair<int,std::string>> using Custom "
                "Operator (Ascending): \n";
-  for (const auto &i : customPairSort) {
+  for (const auto &i : customPairSort)
+  {
     std::cout << i.first << " " << i.second << std::endl;
   };
+
+  // SORTING a Custom Struct using Custom Comparator Function
+  struct Elem
+  {
+    int id;
+    int cost;
+    int duration;
+    Elem(int id, int cost, int duration) : id(id), cost(cost), duration(duration) {}
+  };
+  struct Compare
+  {
+    bool operator()(const Elem &Elem1, const Elem &Elem2) const
+    {
+      if (Elem1.id != Elem2.id)
+        return Elem1.id < Elem2.id;
+      if (Elem1.cost != Elem2.cost)
+        return Elem1.cost < Elem2.cost;
+
+      return Elem1.duration < Elem2.duration;
+    }
+  };
+  std::vector<Elem> elems;
+  elems.emplace_back(2, 2, 3);
+  elems.emplace_back(1, 2, 3);
+  elems.emplace_back(6, 2, 3);
+  elems.emplace_back(10, 2, 3);
+  elems.emplace_back(10, 2, 1);
+
+  std::sort(elems.begin(), elems.end(), Compare());
+
+  // print the sorted vector
+  for (auto &elem : elems)
+  {
+    std::cout << elem.id << " " << elem.cost << " " << elem.duration << std::endl;
+  }
+
+  // For a Priority Queue - we pass the actual Type not the func itself
+  std::priority_queue<Elem, std::vector<Elem>, Compare> pq;
+  pq.emplace(2, 2, 3);
+  pq.emplace(1, 0, 0);
+
+  std::cout << pq.top().id << " " << pq.top().cost << " " << pq.top().duration << std::endl;
+
+  return 0;
 }
